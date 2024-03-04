@@ -1,34 +1,40 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
-import AlbumbItem from "./AlbumItem";
+import AlbumItem from "./AlbumItem";
+import Slider from "./Slider";
 
 const MainSection = () => {
-  const [albums, setAlbumbs] = useState([]);
+  const [albums, setAlbums] = useState([]);
   const [trending, setTrending] = useState([]);
 
   const getHomePageData = async () => {
-    try {
-      const res = await axios.get("https://saavn.dev/modules?language=hindi,english");
-      const { data } = res.data;
-      setAlbumbs(data.albumbs || []);
-      setTrending(data.trending || []);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      // Handle error, e.g., set state to an empty array or show an error message.
-      setAlbumbs([]);
-      setTrending([]);
-    }
+    const res = await axios.get("https://saavn.dev/modules?language=hindi,english");
+    const { data } = res.data;
+    setAlbums(data.albums);
+    setTrending(data.trending);
   };
 
   useEffect(() => {
     getHomePageData();
   }, []);
 
-  return <div>
-      {
-        albums?.map((album) => <AlbumbItem key={album.id} {...album} />)
-      }
-  </div>;
+  const trendingAlbums = useMemo(
+    () => (Array.isArray(trending.albums) ? trending.albums : []),
+    [trending.albums]
+  );
+
+  return (
+    <section className="my-20">
+      <h2 className="text-xl px-5 py-3 font-semibold text-gray-700 w-full lg:w-[78vw] mx-auto">
+        Trending Now
+      </h2>
+      <Slider data={trendingAlbums} />
+      <h2 className="text-xl px-5 py-3 font-semibold text-gray-700 w-full lg:w-[78vw] mx-auto">
+        Top Albums
+      </h2>
+      <Slider data={albums}/>
+    </section>
+  );
 };
 
 export default MainSection;

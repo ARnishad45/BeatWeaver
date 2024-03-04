@@ -1,15 +1,17 @@
-import Navbar from "../components/Navbar"
-import Player from "../components/Player"
 import MainSection from "../components/MainSection";
+import Navbar from "../components/Navbar";
+import Player from "../components/Player";
+import SearchSection from "../components/SearchSection";
 
 const Home = () => {
   return (
     <>
-    <Navbar / >
-    <Player />
-    <MainSection />
+      <Navbar />
+      <SearchSection/>
+      <MainSection/>
+      <Player />
     </>
   );
 };
 
-export default Home
+export default Home;
